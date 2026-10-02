@@ -246,6 +246,17 @@ font:
       "\U000F0F91", # mdi:wardrobe-outline
       "\U000F111C", # mdi:window-shutter
       "\U000F111E", # mdi:window-shutter-open
+      "\U000F00AC", # mdi:blinds
+      "\U000F1011", # mdi:blinds-open
+      "\U000F1A2B", # mdi:blinds-horizontal
+      "\U000F1A2C", # mdi:blinds-horizontal-closed
+      "\U000F1846", # mdi:curtains
+      "\U000F1847", # mdi:curtains-closed
+      "\U000F1A6C", # mdi:roller-shade-closed
+      "\U000F06D9", # mdi:garage
+      "\U000F06DA", # mdi:garage-open
+      "\U000F1B87", # mdi:awning
+      "\U000F1B88", # mdi:awning-outline
     ]
 
 
@@ -269,6 +280,11 @@ font:
       "\U000F0922",  # mdi:wifi-strength-2
       "\U000F0925",  # mdi:wifi-strength-3
       "\U000F0928",  # mdi:wifi-strength-4
+      "\U000F005D",  # mdi:arrow-up (cover tiles)
+      "\U000F04DB",  # mdi:stop (cover tiles)
+      "\U000F0045",  # mdi:arrow-down (cover tiles)
+      "\U000F0E79",  # mdi:arrow-up-down (cover tiles)
+      "\U000F0E77",  # mdi:arrow-top-right-bottom-left (cover tiles)
     ]
 
   - file: "https://github.com/Templarian/MaterialDesign-Webfont/raw/master/fonts/materialdesignicons-webfont.ttf"

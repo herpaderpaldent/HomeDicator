@@ -43,3 +43,13 @@ packages:
   office: !include
     file: ../tiles/thermostat_wide.yaml
     vars: {page_id: heating, entity: office, min_value: 5, max_value: 25, unit: "°C", title: "Office"}
+
+  covers_page: !include
+    file: ../pages/grid.yaml
+    vars: {page_id: covers, title: "Covers"}
+  living_room_blinds: !include
+    file: ../tiles/cover_tilt_wide.yaml
+    vars: {page_id: covers, entity: living_room_blinds, title: "Living Room", icon: "\U000F1A2B", color: 0xeebf41}
+  bedroom_shutter: !include
+    file: ../tiles/cover_wide.yaml
+    vars: {page_id: covers, entity: bedroom_shutter, title: "Bedroom", icon: "\U000F111C", color: 0xeebf41}

@@ -17,6 +17,18 @@ esphome:
             id(sensors__bedroom_co2).publish_state(612);
             id(sensors__bedroom_pm1).publish_state(3.2);
             id(heating__office).publish_state(18);
+            id(covers__living_room_blinds).publish_state(60);
+            id(covers__living_room_blinds__tilt).publish_state(30);
+            id(covers__bedroom_shutter).publish_state(100);
+        - script.execute: update_time
         - logger.log:
             level: INFO
             format: "RENDER_READY"
+
+# Fixed clock so renders only change when the UI does (runs after the real update).
+script:
+  - id: !extend update_time
+    then:
+      - lvgl.label.update:
+          id: lvgl_current_time
+          text: "12:00"

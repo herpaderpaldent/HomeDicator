@@ -2,6 +2,16 @@
 
 An LVGL dashboard for the Seeed SenseCAP Indicator that shows and controls Home Assistant entities. It's an ESPHome package: you write one small config file in Home Assistant that lists your pages and tiles, and ESPHome fetches everything else from this repository.
 
+<p>
+  <img src="https://raw.githubusercontent.com/herpaderpaldent/HomeDicator/renders/page-1.png" width="200" alt="Temperature page with thermostat tiles">
+  <img src="https://raw.githubusercontent.com/herpaderpaldent/HomeDicator/renders/page-2.png" width="200" alt="Sensors page">
+  <img src="https://raw.githubusercontent.com/herpaderpaldent/HomeDicator/renders/page-3.png" width="200" alt="Heating page with a wide thermostat slider">
+  <img src="https://raw.githubusercontent.com/herpaderpaldent/HomeDicator/renders/page-4.png" width="200" alt="Covers page with position and tilt sliders">
+  <img src="https://raw.githubusercontent.com/herpaderpaldent/HomeDicator/renders/page-5.png" width="200" alt="Settings page">
+</p>
+
+<sub>Rendered by CI from <a href="examples/sdl.yaml"><code>examples/sdl.yaml</code></a> on every push to <code>main</code>.</sub>
+
 Based on [HomeDicator](https://github.com/HomeDicator) by Paul-Vincent Roll. GPL-3.0.
 
 ## Use it in Home Assistant
@@ -26,10 +36,13 @@ Every entry in `files:` is one block. Pages appear in the order listed, after th
 | `tiles/thermostat_wide.yaml` | Target temperature slider | `page_id`, `entity`, `title`, `unit`, `min_value`, `max_value` |
 | `tiles/thermostat_wide_half_height.yaml` | Compact slider, icon left | `page_id`, `entity`, `icon`, `unit`, `color`, `min_value`, `max_value` |
 | `tiles/thermostat_wide_half_height_icon_right.yaml` | Compact slider, icon right | `page_id`, `entity`, `icon`, `unit`, `color`, `min_value`, `max_value` |
+| `tiles/cover_wide.yaml` | Cover position slider with open, stop and close buttons | `page_id`, `entity`, `title`, `icon`, `color` |
+| `tiles/cover_tilt_wide.yaml` | Cover position and tilt sliders with open, stop and close buttons | `page_id`, `entity`, `title`, `icon`, `color` |
 
 - `icon` is a [Material Design Icons](https://pictogrammers.com/library/mdi/) codepoint such as `"\U000F0F55"`. It must be in the glyph list in `core/config/common/fonts.yaml`.
 - `color` is a hex number such as `0xeebf41`.
 - The same entity can be on several pages, but only once per page.
+- Cover sliders send the new position when you let go and then follow what Home Assistant reports while the cover moves. A cover without `current_position` (open/close only) shows `n/a` and a disabled slider, but its buttons still work. Use `cover_tilt_wide` only for covers that report `current_tilt_position`.
 
 Optional substitutions:
 
@@ -55,6 +68,6 @@ Run the UI in a window on your computer:
 
 `examples/sdl.yaml` uses local `!include`s with the same files and vars as a real config, so changes show up without pushing.
 
-`scripts/render.sh --docker` renders every page of the example (with fake sensor values) to `renders/*.png` by tapping through the real navigation. CI runs the same script on every push and pull request, uploads the images as the **renders** artifact, and also validates both examples on the oldest supported ESPHome and the version Home Assistant ships.
+`scripts/render.sh --docker` renders every page of the example (with fake sensor values) to `renders/*.png` by tapping through the real navigation. CI runs the same script on every push and pull request and uploads the images as the **renders** artifact. On `main` it also force-pushes them to the `renders` branch, which the screenshots at the top of this README come from. CI also validates both examples on the oldest supported ESPHome and the version Home Assistant ships.
 
 To release: bump `homedicator_core_version_tag` in `core.yaml`, then tag the commit with the same value and push the tag.

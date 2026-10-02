@@ -54,6 +54,8 @@ jobs:
     name: Render pages
     runs-on: ubuntu-latest
     needs: validate
+    permissions:
+      contents: write # Publish renders to the `renders` branch
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -66,6 +68,18 @@ jobs:
         with:
           name: renders
           path: renders/*.png
+      - name: Publish renders for the README
+        # Single-commit orphan branch, force-pushed: no images in main's history.
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: renders
+        run: |
+          git init -q -b renders
+          git add *.png
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -q -m "Renders of ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" renders
+
       - name: Summary
         run: |
           echo "### Rendered pages" >> "$GITHUB_STEP_SUMMARY"

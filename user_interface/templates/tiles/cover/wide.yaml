@@ -1,0 +1,29 @@
+obj:
+  styles: info_or_button_tile_wide
+  width: 440
+  pad_all: 14
+  layout:
+    type: FLEX
+    flex_flow: COLUMN
+    flex_align_main: SPACE_BETWEEN
+    flex_align_cross: CENTER
+    flex_align_track: CENTER
+    pad_row: 0
+  widgets:
+    - !include helpers/header.yaml
+    - obj:
+        width: 100%
+        height: SIZE_CONTENT
+        pad_all: 0
+        bg_opa: TRANSP
+        layout:
+          type: FLEX
+          flex_flow: ROW
+          flex_align_main: SPACE_BETWEEN
+          flex_align_cross: CENTER
+          pad_column: 0
+        widgets:
+          - !include
+              file: helpers/slider.yaml
+              vars: {suffix: "", action: set_cover_position, data_key: position, width: 326, height: 60}
+          - !include {file: helpers/value.yaml, vars: {suffix: ""}}

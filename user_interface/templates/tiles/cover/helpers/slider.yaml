@@ -1,0 +1,53 @@
+# 0-100 slider for a cover position or tilt. Dragging only updates the label; the HA action is sent once
+# on release, so the cover gets a single target instead of one per pixel. Afterwards the slider follows
+# the positions HA reports while the cover moves (core/templates/cover_sensor.yaml).
+# vars: suffix, action, data_key, width, height
+slider:
+  id: lvgl_slider_${page_id}__${entity}${suffix}
+  state:
+    disabled: true
+  min_value: 0
+  max_value: 100
+  value: 0
+  height: ${height}
+  width: ${width}
+  radius: 12
+  bg_color: 0x3c3c3c
+  indicator:
+    radius: 10
+    bg_color: ${color}
+  knob:
+    bg_opa: TRANSP
+    radius: 10
+    pad_top: 0
+    pad_bottom: 0
+    pad_left: -40
+    pad_right: -40
+  on_press:
+    then:
+      - globals.set:
+          id: user_is_interacting
+          value: 'true'
+  on_value:
+    if:
+      condition:
+        lambda: |-
+          return id(user_is_interacting);
+      then:
+        - lvgl.label.update:
+            id: lvgl_value_label_${page_id}__${entity}${suffix}
+            text: !lambda |-
+              char buffer[10];
+              snprintf(buffer, sizeof(buffer), "%.0f", x);
+              return std::string(buffer);
+  on_release:
+    then:
+      - globals.set:
+          id: user_is_interacting
+          value: 'false'
+      - homeassistant.action:
+          action: cover.${action}
+          data:
+            entity_id: cover.${entity}
+            ${data_key}: !lambda |-
+              return static_cast<int>(x);
