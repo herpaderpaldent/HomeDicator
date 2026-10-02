@@ -44,7 +44,14 @@ Every entry in `files:` is one block. Pages appear in the order listed, after th
 - The same entity can be on several pages, but only once per page.
 - Cover sliders send the new position when you let go and then follow what Home Assistant reports while the cover moves. A cover without `current_position` (open/close only) shows `n/a` and a disabled slider, but its buttons still work. Use `cover_tilt_wide` only for covers that report `current_tilt_position`.
 
-Optional substitutions: `page_transition_time` (default `150ms`), `user_interface_debug_mode` (`"true"` draws layout borders) and `homedicator_release_repo` (the repo the settings page checks for updates).
+Optional substitutions:
+
+| Substitution | Default | Meaning |
+|---|---|---|
+| `screen_off_after` | `"Never"` | Default "Turn off screen after" setting: `"Never"`, `"1 min"`, `"5 min"` or `"15 min"` (anything else fails the build). A device stores the setting on its first boot with this version and keeps it from then on, so later changes to this substitution only reach new devices; change it on the screen instead. |
+| `page_transition_time` | `150ms` | Page swipe animation length |
+| `user_interface_debug_mode` | `"false"` | `"true"` draws layout borders |
+| `homedicator_release_repo` | `herpaderpaldent/HomeDicator` | Repo the settings page checks for updates |
 
 You can add your own ESPHome config below the package in the same file. Your own `lvgl: pages:` are appended after the package pages, and `!extend` / `!remove` work on package ids such as `<page_id>_grid`.
 
