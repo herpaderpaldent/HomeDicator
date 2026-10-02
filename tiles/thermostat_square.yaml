@@ -1,0 +1,12 @@
+# Thermostat arc tile (square). vars: page_id, entity (without "climate."), title, color, min_value, max_value
+sensor:
+  - !include ../core/templates/climate_sensor.yaml
+
+lvgl:
+  pages:
+    - id: !extend ${page_id}
+      widgets:
+        - obj:
+            id: !extend ${page_id}_grid
+            widgets:
+              - !include ../user_interface/templates/tiles/thermostat/square.yaml

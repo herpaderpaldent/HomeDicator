@@ -1,0 +1,12 @@
+# Thermostat slider tile (wide). vars: page_id, entity (without "climate."), title, unit, min_value, max_value
+sensor:
+  - !include ../core/templates/climate_sensor_wide.yaml
+
+lvgl:
+  pages:
+    - id: !extend ${page_id}
+      widgets:
+        - obj:
+            id: !extend ${page_id}_grid
+            widgets:
+              - !include ../user_interface/templates/tiles/thermostat/wide.yaml

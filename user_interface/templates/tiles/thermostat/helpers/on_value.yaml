@@ -4,7 +4,7 @@ if:
       return id(user_is_interacting);
   then:
     - lvgl.label.update:
-        id: lvgl_value_label_${hass_climate_id}
+        id: lvgl_value_label_${page_id}__${entity}
         text: !lambda |-
           char buffer[10];
           snprintf(buffer, sizeof(buffer), "%.0f", x);
@@ -12,6 +12,6 @@ if:
     - homeassistant.action:
         action: climate.set_temperature
         data:
-          entity_id: climate.${hass_climate_id}
+          entity_id: climate.${entity}
           temperature: !lambda |-
             return static_cast<int>(x);

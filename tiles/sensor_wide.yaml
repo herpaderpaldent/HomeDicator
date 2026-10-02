@@ -1,0 +1,12 @@
+# Sensor tile (wide). vars: page_id, entity (without "sensor."), title, icon, unit, color
+sensor:
+  - !include ../core/templates/sensor.yaml
+
+lvgl:
+  pages:
+    - id: !extend ${page_id}
+      widgets:
+        - obj:
+            id: !extend ${page_id}_grid
+            widgets:
+              - !include ../user_interface/templates/tiles/sensor/wide.yaml

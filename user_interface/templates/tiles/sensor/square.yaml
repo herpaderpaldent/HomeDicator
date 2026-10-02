@@ -36,7 +36,7 @@ obj:
           pad_row: 3
         widgets:
           - label:
-              id: lvgl_value_label_${hass_sensor_id}
+              id: lvgl_value_label_${page_id}__${entity}
               text_font: libreFranklin32
               text: "n/a"
           - label:

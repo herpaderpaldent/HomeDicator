@@ -1,0 +1,39 @@
+# Starting point for a SenseCAP Indicator. Copy this file into Home Assistant's ESPHome folder
+# (/config/esphome/<name>.yaml), put the four secrets into /config/esphome/secrets.yaml and adjust the pages.
+substitutions:
+  device_name: "homedicator"
+  device_friendly_name: "HomeDicator"
+  api_key: !secret api_key
+  ota_key: !secret ota_key
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
+
+dashboard_import:
+  package_import_url: github://herpaderpaldent/HomeDicator/examples/sensecap.yaml@v1.0.0
+  import_full_config: true
+
+packages:
+  homedicator:
+    url: https://github.com/herpaderpaldent/HomeDicator
+    ref: v1.0.0       # Bump to update. File paths and vars are stable within a major version.
+    refresh: never    # A new ref is fetched automatically.
+    files:
+      - path: device/seeed-sensecap-indicator.yaml
+
+      # Pages appear in the order listed. Tiles go onto the page named by page_id, in the order listed.
+      - path: pages/grid.yaml
+        vars: {page_id: climate, title: "Temperature"}
+      - path: tiles/thermostat_square.yaml
+        vars: {page_id: climate, entity: living_room, color: 0xeebf41, min_value: 5, max_value: 25, title: "Living Room"}
+      - path: tiles/thermostat_wide_half_height.yaml
+        vars: {page_id: climate, entity: bathroom, color: 0xeebf41, min_value: 5, max_value: 25, unit: "°C", icon: "\U000F1819"}
+
+      - path: pages/grid.yaml
+        vars: {page_id: sensors, title: "Sensors"}
+      - path: tiles/sensor_square.yaml
+        vars: {page_id: sensors, entity: bedroom_temperature, color: 0xeebf41, icon: "\U000F0F55", unit: "°C", title: "Bedroom"}
+      - path: tiles/sensor_wide.yaml
+        vars: {page_id: sensors, entity: bedroom_co2, color: 0xeebf41, icon: "\U000F07E4", unit: "ppm", title: "Bedroom"}
+
+# Anything device-specific goes below as plain ESPHome config, e.g. extra sensors,
+# your own `lvgl: pages:` (appended after the package pages) or `!extend` of a package widget.

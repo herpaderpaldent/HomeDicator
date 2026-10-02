@@ -47,7 +47,7 @@ obj:
                       pad_column: 0
                     widgets:
                       - label:
-                          id: lvgl_value_label_${hass_climate_id}
+                          id: lvgl_value_label_${page_id}__${entity}
                           text_font: libreFranklin32
                           text: "n/a"
                       - label:
@@ -73,7 +73,7 @@ obj:
                 pad_row: 0
               widgets:
                 - arc:
-                    id: lvgl_arc_${hass_climate_id}
+                    id: lvgl_arc_${page_id}__${entity}
                     state:
                       disabled: true
                     pad_all: 0
@@ -83,10 +83,14 @@ obj:
                     value: ${min_value}
                     arc_width: 20
                     arc_color: !lambda |- # Using arc_opa sadly causes the circle used for the rounded end to be visible so shifting the color to a darker value
-                      uint32_t color = ${color};
-                      float darken_factor = 0.25;
-                      float saturation_reduction_factor = 0.8;
-                      return adjust_color(color, darken_factor, saturation_reduction_factor);
+                      // Inlined former core/helpers/adjust_color.h (esphome.includes can't resolve from a remote package)
+                      const uint32_t color = ${color};
+                      const float darken = 0.25f, desat = 0.8f;
+                      uint8_t r = ((color >> 16) & 0xFF) * darken;
+                      uint8_t g = ((color >> 8) & 0xFF) * darken;
+                      uint8_t b = (color & 0xFF) * darken;
+                      uint8_t gray = (r + g + b) / 3;
+                      return lv_color_make(r * (1 - desat) + gray * desat, g * (1 - desat) + gray * desat, b * (1 - desat) + gray * desat);
                     indicator:
                       arc_width: 20
                       arc_color: ${color}

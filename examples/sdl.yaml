@@ -1,0 +1,45 @@
+# Desktop development config: runs the UI in an SDL window (`esphome run examples/sdl.yaml`).
+# Uses local includes, mirroring the `files:` list a real device config uses (see sensecap.yaml).
+substitutions:
+  device_name: "homedicator-development"
+  device_friendly_name: "HomeDicator Development"
+  api_key: "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=" # Dummy key, desktop build only
+
+packages:
+  device: !include ../device/sdl.yaml
+
+  climate_page: !include
+    file: ../pages/grid.yaml
+    vars: {page_id: climate, title: "Temperature"}
+  bedroom_desk: !include
+    file: ../tiles/thermostat_wide_half_height.yaml
+    vars: {page_id: climate, entity: bedroom_desk, color: 0xeebf41, min_value: 5, max_value: 25, unit: "°C", icon: "\U000F08A0"}
+  living_room: !include
+    file: ../tiles/thermostat_square.yaml
+    vars: {page_id: climate, entity: living_room, color: 0xeebf41, min_value: 5, max_value: 25, title: "Living Room"}
+  kitchen: !include
+    file: ../tiles/thermostat_square.yaml
+    vars: {page_id: climate, entity: kitchen, color: 0xeebf41, min_value: 5, max_value: 25, title: "Kitchen"}
+  bathroom: !include
+    file: ../tiles/thermostat_wide_half_height_icon_right.yaml
+    vars: {page_id: climate, entity: bathroom, color: 0xeebf41, min_value: 5, max_value: 25, unit: "°C", icon: "\U000F1819"}
+
+  sensors_page: !include
+    file: ../pages/grid.yaml
+    vars: {page_id: sensors, title: "Sensors"}
+  bedroom_temperature: !include
+    file: ../tiles/sensor_square.yaml
+    vars: {page_id: sensors, entity: bedroom_temperature, color: 0xeebf41, icon: "\U000F0F55", unit: "°C", title: "Bedroom"}
+  bedroom_co2: !include
+    file: ../tiles/sensor_square.yaml
+    vars: {page_id: sensors, entity: bedroom_co2, color: 0xeebf41, icon: "\U000F07E4", unit: "ppm", title: "Bedroom"}
+  bedroom_pm1: !include
+    file: ../tiles/sensor_wide.yaml
+    vars: {page_id: sensors, entity: bedroom_pm1, color: 0xeebf41, icon: "\U000F013B", unit: "µg/m³", title: "Bedroom"}
+
+  heating_page: !include
+    file: ../pages/grid.yaml
+    vars: {page_id: heating, title: "Heating"}
+  office: !include
+    file: ../tiles/thermostat_wide.yaml
+    vars: {page_id: heating, entity: office, min_value: 5, max_value: 25, unit: "°C", title: "Office"}

@@ -1,10 +1,10 @@
 platform: homeassistant
-id: ${hass_sensor_id}
-entity_id: sensor.${hass_sensor_id}
+id: ${page_id}__${entity}
+entity_id: sensor.${entity}
 on_value:
   - lvgl.label.update:
-      id: lvgl_value_label_${hass_sensor_id}
+      id: lvgl_value_label_${page_id}__${entity}
       text: !lambda |-
         char buffer[10];
         snprintf(buffer, sizeof(buffer), "%.1f", x);
-        return buffer;
+        return std::string(buffer);

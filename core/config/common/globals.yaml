@@ -1,10 +1,10 @@
 globals:
-  - id: current_page
-    type: int
-    restore_value: no
-    initial_value: "0"
   - id: pager_dots
-    type: lv_obj_t*[${total_pages}]
+    type: std::vector<lv_obj_t *>
+    restore_value: no
+  # LVGL page indices of all non-skip pages in pager order (settings ends up last)
+  - id: page_order
+    type: std::vector<size_t>
     restore_value: no
   - id: user_is_interacting
     type: bool

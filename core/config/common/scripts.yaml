@@ -37,51 +37,58 @@ script:
       - lvgl.widget.show: right_tap_area
       - lvgl.widget.show: bottom_pager
 
-  - id: create_pager_dots
+  # Builds the pager from the pages that actually exist (no total_pages needed).
+  # Walks the page cycle once with the public LvglComponent API, records the order of
+  # non-skip pages, and finishes on the first page after "settings" (first user page).
+  - id: init_pager
     then:
       - lambda: |-
-          for (int i = 0; i < ${total_pages}; i++) {
-            auto dot = lv_obj_create(id(bottom_pager));  // Create each dot object
-            lv_obj_set_size(dot, 8, 8);  // Set width and height of the dot (8x8)
-            lv_obj_set_style_radius(dot, 4, LV_PART_MAIN);  // Set radius to make it circular
-            lv_obj_set_style_bg_color(dot, (i == 0) ? lv_color_hex(0xffffff) : lv_color_hex(0x626262), LV_PART_MAIN);  // Set color based on active/inactive
-            lv_obj_set_style_bg_opa(dot, LV_OPA_COVER, LV_PART_MAIN);  // Ensure the background is fully opaque
-            lv_obj_set_style_border_width(dot, 0, LV_PART_MAIN);  // Disable borders
-            lv_obj_set_style_border_color(dot, lv_color_hex(0x000000), LV_PART_MAIN);  // Set border color to black (doesn't matter since width is 0)
-            id(pager_dots)[i] = dot;  // Store the dot reference
+          auto *lv = id(settings)->get_parent();
+          auto &order = id(page_order);
+          order.clear();
+          size_t start = lv->get_current_page();
+          do {
+            lv->show_next_page({}, 0);
+            order.push_back(lv->get_current_page());
+          } while (lv->get_current_page() != start && order.size() < 64);
+          lv->show_next_page({}, 0);  // land on first user page
+          for (size_t i = 0; i < order.size(); i++) {
+            auto dot = lv_obj_create(id(bottom_pager));
+            lv_obj_set_size(dot, 8, 8);
+            lv_obj_set_style_radius(dot, 4, LV_PART_MAIN);
+            lv_obj_set_style_bg_opa(dot, LV_OPA_COVER, LV_PART_MAIN);
+            lv_obj_set_style_border_width(dot, 0, LV_PART_MAIN);
+            id(pager_dots).push_back(dot);
+          }
+          std::string seq;
+          for (auto i : order) seq += std::to_string(i) + " ";
+          ESP_LOGI("pager", "Pager initialised with %u pages, order: %s, showing page %u",
+                   (unsigned) order.size(), seq.c_str(), (unsigned) lv->get_current_page());
+      - script.execute: update_pager_dots
+
+  - id: update_pager_dots
+    then:
+      - lambda: |-
+          size_t cur = id(settings)->get_parent()->get_current_page();
+          auto &dots = id(pager_dots);
+          auto &order = id(page_order);
+          for (size_t i = 0; i < dots.size() && i < order.size(); i++) {
+            lv_obj_set_style_bg_color(dots[i], order[i] == cur ? lv_color_hex(0xffffff) : lv_color_hex(0x626262), LV_PART_MAIN);
           }
 
   - id: next_page
     then:
-      - globals.set:
-          id: current_page
-          value: !lambda |-
-            int next_page = id(current_page) + 1;
-            return (next_page >= ${total_pages}) ? 0 : next_page;  // Loop back to 0 if exceeding the total pages
       - lvgl.page.next:
           animation: MOVE_LEFT
           time: ${page_transition_time}
-      - lambda: |-
-          for (int i = 0; i < ${total_pages}; i++) {
-            lv_obj_t* dot = id(pager_dots)[i];
-            lv_obj_set_style_bg_color(dot, (i == id(current_page)) ? lv_color_hex(0xffffff) : lv_color_hex(0x626262), LV_PART_MAIN);  // Active color is white, inactive is gray
-          }
+      - script.execute: update_pager_dots
 
   - id: previous_page
     then:
-      - globals.set:
-          id: current_page
-          value: !lambda |-
-            int prev_page = id(current_page) - 1;
-            return (prev_page < 0) ? ${total_pages} - 1 : prev_page;  // Loop back to max page if going below 0
       - lvgl.page.previous:
           animation: MOVE_RIGHT
           time: ${page_transition_time}
-      - lambda: |-
-          for (int i = 0; i < ${total_pages}; i++) {
-            lv_obj_t* dot = id(pager_dots)[i];
-            lv_obj_set_style_bg_color(dot, (i == id(current_page)) ? lv_color_hex(0xffffff) : lv_color_hex(0x626262), LV_PART_MAIN);  // Active color is white, inactive is gray
-          }
+      - script.execute: update_pager_dots
 
   - id: activity_timeout_reached
     then:

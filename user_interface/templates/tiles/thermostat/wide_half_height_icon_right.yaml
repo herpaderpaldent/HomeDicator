@@ -19,7 +19,7 @@ obj:
           pad_row: 0
         widgets:
           - slider:
-              id: lvgl_slider_${hass_climate_id}
+              id: lvgl_slider_${page_id}__${entity}
               state:
                 disabled: true
               min_value: ${min_value}
@@ -85,7 +85,7 @@ obj:
           pad_column: 3
         widgets:
           - label:
-              id: lvgl_value_label_${hass_climate_id}
+              id: lvgl_value_label_${page_id}__${entity}
               text_font: libreFranklin24
               text_color: 0xffffff
               text: "n/a"

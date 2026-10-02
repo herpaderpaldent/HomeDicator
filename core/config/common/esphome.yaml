@@ -2,27 +2,21 @@ esphome:
   name: ${device_name}
   friendly_name: ${device_friendly_name}
   project:
-    name: "paulvincentroll.HomeDicator"
+    name: "herpaderpaldent.HomeDicator"
     version: ${homedicator_core_version_tag}
-
-  includes:
-    - HomeDicator/core/helpers/adjust_color.h
 
   platformio_options:
     build_unflags: -Werror=all
 
   on_boot:
-    - priority: 800.0
-      then:
-        - script.execute: create_pager_dots
     - priority: 250.0
       then:
         - text_sensor.template.publish:
             id: github_release_tag
             state: ${homedicator_core_version_tag} # Set inital value to current version
-        # Using ESPhome packages will cause the settings page to be the first one, lvgl.page.next will make it look like the last one again.
-        - lvgl.page.next:
-            animation: NONE
+        # Settings is the first LVGL page (core package merges first). init_pager discovers all
+        # pages, builds the dots and switches to the first user page.
+        - script.execute: init_pager
     - priority: 200.0
       then:
         - select.set_index:

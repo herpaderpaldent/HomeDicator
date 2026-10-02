@@ -1,0 +1,19 @@
+# A pager page with a title and a flex grid that tiles extend into.
+# vars: page_id, title
+lvgl:
+  pages:
+    - id: ${page_id}
+      bg_opa: TRANSP
+      widgets:
+        - !include
+            file: ../user_interface/templates/page_title.yaml
+            vars:
+              title: ${title}
+        - obj:
+            id: ${page_id}_grid
+            styles: content_container
+            layout:
+              type: FLEX
+              flex_flow: ROW_WRAP
+              flex_align_main: START
+              flex_align_cross: CENTER

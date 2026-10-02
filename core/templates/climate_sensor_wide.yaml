@@ -1,10 +1,10 @@
 platform: homeassistant
-id: ${hass_climate_id}
-entity_id: climate.${hass_climate_id}
+id: ${page_id}__${entity}
+entity_id: climate.${entity}
 attribute: temperature
 on_value:
   - lvgl.widget.update:
-      id: lvgl_slider_${hass_climate_id}
+      id: lvgl_slider_${page_id}__${entity}
       state:
         disabled: false
   - if:
@@ -13,12 +13,12 @@ on_value:
          return !id(user_is_interacting);
      then:
       - lvgl.label.update:
-          id: lvgl_value_label_${hass_climate_id}
+          id: lvgl_value_label_${page_id}__${entity}
           text: !lambda |-
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.0f", x);
-            return buffer;
+            return std::string(buffer);
       - lvgl.slider.update:
-          id: lvgl_slider_${hass_climate_id}
+          id: lvgl_slider_${page_id}__${entity}
           value: !lambda |-
             return x;
