@@ -1,0 +1,22 @@
+# Screenshot build: examples/sdl.yaml with fake sensor values and no "connecting" overlay.
+# Used by scripts/render.sh; not meant to be run by hand.
+packages:
+  dev: !include sdl.yaml
+
+esphome:
+  on_boot:
+    - priority: -100
+      then:
+        - lvgl.widget.hide: connecting_view
+        - lambda: |-
+            id(climate__bedroom_desk).publish_state(19);
+            id(climate__living_room).publish_state(21);
+            id(climate__kitchen).publish_state(20);
+            id(climate__bathroom).publish_state(23);
+            id(sensors__bedroom_temperature).publish_state(21.4);
+            id(sensors__bedroom_co2).publish_state(612);
+            id(sensors__bedroom_pm1).publish_state(3.2);
+            id(heating__office).publish_state(18);
+        - logger.log:
+            level: INFO
+            format: "RENDER_READY"

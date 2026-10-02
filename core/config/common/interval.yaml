@@ -13,7 +13,7 @@ interval:
                   then:
                     - lambda: |-
                         json::parse_json(body, [](JsonObject root) -> bool {
-                          if (root.containsKey("tag_name")) {
+                          if (root["tag_name"].is<const char *>()) {
                               std::string tag_name = root["tag_name"].as<std::string>();
                               id(github_release_tag).publish_state(tag_name);
                               ESP_LOGI("main", "GitHub Release Tag: %s", tag_name.c_str());

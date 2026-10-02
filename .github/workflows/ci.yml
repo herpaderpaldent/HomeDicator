@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate (ESPHome ${{ matrix.esphome }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Oldest supported and the version the Home Assistant add-on ships.
+        esphome: ["2025.12.3", "2026.9.1"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "esphome==${{ matrix.esphome }}"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq libsdl2-dev
+
+      - name: Validate desktop example
+        run: esphome config examples/sdl.yaml > /dev/null
+
+      - name: Validate SenseCAP example as a remote package
+        # Consumes this checkout exactly the way Home Assistant consumes the GitHub repo.
+        run: |
+          git branch -f ci-under-test HEAD
+          mkdir -p /tmp/consumer
+          sed -e "s#url: https://github.com/herpaderpaldent/HomeDicator#url: file://$GITHUB_WORKSPACE#" \
+              -e "s#ref: v[0-9.]*.*#ref: ci-under-test#" \
+              -e "s#refresh: never.*#refresh: 0s#" \
+              -e "/^dashboard_import:/,/^$/d" \
+              examples/sensecap.yaml > /tmp/consumer/sensecap.yaml
+          printf '%s\n' 'api_key: "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY="' \
+            'ota_key: ci-dummy' 'wifi_ssid: ci-dummy' 'wifi_password: ci-dummy-pass' > /tmp/consumer/secrets.yaml
+          esphome config /tmp/consumer/sensecap.yaml > /dev/null
+
+      - name: Compile desktop example
+        run: esphome compile examples/sdl.yaml
+
+      - name: Compile SenseCAP firmware
+        if: matrix.esphome == '2026.9.1'
+        run: esphome compile /tmp/consumer/sensecap.yaml
+
+  render:
+    name: Render pages
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "esphome==2026.9.1"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq libsdl2-dev xvfb xdotool imagemagick
+      - run: scripts/render.sh renders
+      - uses: actions/upload-artifact@v4
+        with:
+          name: renders
+          path: renders/*.png
+      - name: Summary
+        run: |
+          echo "### Rendered pages" >> "$GITHUB_STEP_SUMMARY"
+          ls renders >> "$GITHUB_STEP_SUMMARY"
+          echo "Download the **renders** artifact to view them." >> "$GITHUB_STEP_SUMMARY"
