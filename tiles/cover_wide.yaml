@@ -1,0 +1,14 @@
+# Cover position tile (wide): slider plus open / stop / close. vars: page_id, entity (without "cover."), title, icon, color
+sensor:
+  - !include
+      file: ../core/templates/cover_sensor.yaml
+      vars: {attribute: current_position, suffix: ""}
+
+lvgl:
+  pages:
+    - id: !extend ${page_id}
+      widgets:
+        - obj:
+            id: !extend ${page_id}_grid
+            widgets:
+              - !include ../user_interface/templates/tiles/cover/wide.yaml

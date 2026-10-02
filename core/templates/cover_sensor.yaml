@@ -1,0 +1,26 @@
+# Cover position or tilt (0-100) from a cover attribute. Enables the matching slider on the first value
+# and follows HA unless the user is dragging. vars: attribute, suffix ("" for position, "__tilt" for tilt)
+platform: homeassistant
+id: ${page_id}__${entity}${suffix}
+entity_id: cover.${entity}
+attribute: ${attribute}
+on_value:
+  - lvgl.widget.update:
+      id: lvgl_slider_${page_id}__${entity}${suffix}
+      state:
+        disabled: false
+  - if:
+     condition:
+       lambda: |-
+         return !id(user_is_interacting);
+     then:
+      - lvgl.label.update:
+          id: lvgl_value_label_${page_id}__${entity}${suffix}
+          text: !lambda |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.0f", x);
+            return std::string(buffer);
+      - lvgl.slider.update:
+          id: lvgl_slider_${page_id}__${entity}${suffix}
+          value: !lambda |-
+            return x;

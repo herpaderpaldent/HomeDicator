@@ -1,0 +1,41 @@
+# Cover tile header: icon pill and title on the left, open / stop / close on the right.
+obj:
+  width: 100%
+  height: SIZE_CONTENT
+  pad_all: 0
+  bg_opa: TRANSP
+  layout:
+    type: FLEX
+    flex_flow: ROW
+    flex_align_main: START
+    flex_align_cross: CENTER
+    flex_align_track: CENTER
+    pad_column: 8
+  widgets:
+    - obj:
+        bg_opa: COVER
+        bg_color: ${color}
+        pad_all: 0
+        height: 44
+        width: 64
+        radius: 22
+        layout:
+          type: FLEX
+          flex_flow: COLUMN
+          flex_align_main: CENTER
+          flex_align_cross: CENTER
+          flex_align_track: CENTER
+        widgets:
+          - label:
+              styles: info_or_button_tile_icon
+              text: ${icon}
+    - label:
+        flex_grow: 1
+        pad_left: 4
+        long_mode: DOT
+        text_font: libreFranklin18
+        text_color: 0xffffff
+        text: ${title}
+    - !include {file: button.yaml, vars: {action: open_cover, icon: "\U000F005D"}}  # mdi:arrow-up
+    - !include {file: button.yaml, vars: {action: stop_cover, icon: "\U000F04DB"}}  # mdi:stop
+    - !include {file: button.yaml, vars: {action: close_cover, icon: "\U000F0045"}} # mdi:arrow-down

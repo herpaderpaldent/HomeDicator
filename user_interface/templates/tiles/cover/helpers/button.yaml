@@ -1,0 +1,16 @@
+# Icon button that calls a cover action without data (open_cover, stop_cover, close_cover). vars: action, icon
+button:
+  styles: cover_tile_button
+  pressed:
+    bg_color: 0x5a5a5a
+  widgets:
+    - label:
+        align: CENTER
+        text_font: icons24
+        text_color: 0xffffff
+        text: ${icon}
+  on_click:
+    - homeassistant.action:
+        action: cover.${action}
+        data:
+          entity_id: cover.${entity}
