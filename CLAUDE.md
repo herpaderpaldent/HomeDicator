@@ -14,7 +14,7 @@ Requires ESPHome plus the SDL2 requirements for the `sdl` display platform.
 - Validate / compile: `esphome config examples/sdl.yaml`, `esphome compile examples/sdl.yaml`
 
 - Render all pages to PNG: `scripts/render.sh --docker` (Linux without `--docker` needs Xvfb, xdotool, ImageMagick, SDL2). It uses `examples/render.yaml`, which feeds fake values via `publish_state` on the `${page_id}__${entity}` sensor ids, so update it when the example tiles change. The script fails if a tap on the right edge doesn't change the page.
-- CI (`.github/workflows/ci.yml`) validates on the oldest supported version and the HA add-on version, then renders.
+- CI (`.github/workflows/ci.yml`) validates on the oldest supported version and the HA add-on version, then renders. On pushes to `main` it force-pushes the PNGs as a single-commit orphan branch `renders`, which the README embeds via raw.githubusercontent.com. Never commit renders to `main`. `examples/render.yaml` pins the clock to 12:00 so the images only change when the UI does.
 
 `examples/sdl.yaml` uses local `!include`s with the same files and vars a remote config uses, and it exercises every tile type. Check changes against both the local ESPHome and the version the HA add-on ships, because the add-on uses LVGL 9 from 2026.x. To test the real remote path, point a scratch copy of `examples/sensecap.yaml` at `url: file:///<this repo>` with `ref: <branch>` and `refresh: 0s`. A `file://` package only sees **committed** content. Remote packages switch off ESPHome's secret masking, so `esphome config` output contains secret values.
 
