@@ -30,3 +30,4 @@ Temporary Items
 secrets.yaml
 .idea/
 renders/
+examples/.gitignore

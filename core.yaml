@@ -1,6 +1,6 @@
 ---    
 substitutions:
-    homedicator_core_version_tag: "v0.3.2"
+    homedicator_core_version_tag: "v1.0.0"
     homedicator_release_repo: "herpaderpaldent/HomeDicator"
     # Defaults; override in your own substitutions.
     page_transition_time: 150ms # How long to animate the transition between pages.

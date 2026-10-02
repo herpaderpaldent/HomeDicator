@@ -48,4 +48,6 @@ Run the UI in a window on your computer:
 
 `examples/sdl.yaml` uses local `!include`s with the same files and vars as a real config, so changes show up without pushing.
 
+`scripts/render.sh --docker` renders every page of the example (with fake sensor values) to `renders/*.png` by tapping through the real navigation. CI runs the same script on every push and pull request, uploads the images as the **renders** artifact, and also validates both examples on the oldest supported ESPHome and the version Home Assistant ships.
+
 To release: bump `homedicator_core_version_tag` in `core.yaml`, then tag the commit with the same value and push the tag.
