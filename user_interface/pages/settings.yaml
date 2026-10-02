@@ -127,6 +127,7 @@ widgets:
                     selected:
                       checked:
                         bg_color: 0x92ae67
+                  selected_text: ${screen_off_after} # Default until changed on the device
                   options:
                     - "Never"
                     - "1 min"

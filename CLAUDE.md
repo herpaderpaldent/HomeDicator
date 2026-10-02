@@ -47,7 +47,7 @@ Requires ESPHome plus the SDL2 requirements for the `sdl` display platform.
 **Versioning and settings**
 - `homedicator_core_version_tag` in `core.yaml` is the release version. The settings/about page compares it with the latest GitHub release of `${homedicator_release_repo}` (`core/config/common/interval.yaml`).
 - To release: bump the tag value, commit, `git tag` the same value, push the tags.
-- `core.yaml` substitutions are defaults the user can override: `page_transition_time`, `user_interface_debug_mode`, `homedicator_release_repo`.
+- `core.yaml` substitutions are defaults the user can override: `page_transition_time`, `user_interface_debug_mode`, `homedicator_release_repo`, `screen_off_after` (the latter is the dropdown's `selected_text` in `settings.yaml`; the LVGL select in `select.yaml` persists the choice with `restore_value` and mirrors it into the `turn_off_screen_after_value` global, whose initial value only exists to `static_assert` a valid option. Keep the options in sync across `settings.yaml`, `globals.yaml` and `lvgl/on_idle.yaml`).
 - The user must provide `device_name`, `device_friendly_name` and `api_key`. On real hardware they must also provide `ota_key`, `wifi_ssid` and `wifi_password`, via `!secret` in their own HA file.
 
 **UI odds and ends**
