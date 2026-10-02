@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 HomeDicator is an LVGL-based Home Assistant dashboard firmware for a 480x480 touch display (Seeed SenseCAP Indicator), published as a public ESPHome **remote package**. Users don't copy this repo. They write one config in Home Assistant whose `packages: homedicator: {url, ref, files: [...]}` lists a device file plus page and tile files with `vars` (see `examples/sensecap.yaml` and the README table). Everything is ESPHome YAML with inline C++ lambdas. There is no build system or test suite beyond ESPHome itself.
 
+## Workflow
+
+The maintainer merges pull requests, bumps the version, tags and creates GitHub releases **themselves**. Claude works on a branch, pushes it and opens a PR, then stops. Never merge, push to `main`, tag or create releases, even when CI is green.
+
 ## Commands
 
 Requires ESPHome plus the SDL2 requirements for the `sdl` display platform.
@@ -46,7 +50,7 @@ Requires ESPHome plus the SDL2 requirements for the `sdl` display platform.
 
 **Versioning and settings**
 - `homedicator_core_version_tag` in `core.yaml` is the release version. The settings/about page compares it with the latest GitHub release of `${homedicator_release_repo}` (`core/config/common/interval.yaml`).
-- To release: bump the tag value, commit, `git tag` the same value, push the tags.
+- Releasing means bumping the tag value, tagging that commit and creating a GitHub release. The settings page checks releases, not bare tags.
 - `core.yaml` substitutions are defaults the user can override: `page_transition_time`, `user_interface_debug_mode`, `homedicator_release_repo`.
 - The user must provide `device_name`, `device_friendly_name` and `api_key`. On real hardware they must also provide `ota_key`, `wifi_ssid` and `wifi_password`, via `!secret` in their own HA file.
 
