@@ -32,8 +32,8 @@ Requires ESPHome plus the SDL2 requirements for the `sdl` display platform.
 - Each `tiles/*.yaml` is a top-level package that pairs two templates:
   - an HA data template from `core/templates/` (`sensor:` list item)
   - a widget template from `user_interface/templates/tiles/`, inserted via `lvgl: pages: - id: !extend ${page_id} → obj id: !extend ${page_id}_grid → widgets`
-- Package vars act as substitutions for the nested `!include`s.
-- All per-tile ids are `${page_id}__${entity}`: the sensor id, `lvgl_value_label_…`, `lvgl_arc_…` / `lvgl_slider_…`. The same entity can appear on several pages, but only once per page. Data and widget templates must agree on these ids.
+- Package vars act as substitutions for the nested `!include`s. A nested `!include` with its own `vars` (e.g. the cover helpers in `user_interface/templates/tiles/cover/helpers/`) still sees the outer ones such as `${page_id}` and `${entity}`.
+- All per-tile ids are `${page_id}__${entity}`: the sensor id, `lvgl_value_label_…`, `lvgl_arc_…` / `lvgl_slider_…`. When one entity needs several of them, a suffix is appended (cover tilt: `${page_id}__${entity}__tilt`). The same entity can appear on several pages, but only once per page. Data and widget templates must agree on these ids.
 
 **Merge order.** ESPHome concatenates lists with the deepest package first: core's `settings` and `about` (skip) pages, then the user's `files:` entries in the order listed, then the user's own YAML. `!extend` / `!remove` resolve after merging.
 
@@ -42,7 +42,7 @@ Requires ESPHome plus the SDL2 requirements for the `sdl` display platform.
 - `next_page` / `previous_page` call `update_pager_dots`.
 - Don't reach into `LvglComponent` internals: `pages_` is protected and the class is `final` in 2026.x.
 
-**Thermostat interaction.** The `user_is_interacting` global is set while an arc or slider is being dragged, and incoming HA updates are ignored during that time. Arcs and sliders start disabled and are enabled on the first value. `tiles/thermostat/helpers/on_value.yaml` sends `climate.set_temperature`.
+**Slider interaction.** The `user_is_interacting` global is set while an arc or slider is being dragged, and incoming HA updates are ignored during that time. Arcs and sliders start disabled and are enabled on the first value. `tiles/thermostat/helpers/on_value.yaml` sends `climate.set_temperature` on every change while dragging. Cover sliders (`tiles/cover/helpers/slider.yaml`) send `cover.set_cover_position` / `set_cover_tilt_position` once on release and then follow the intermediate positions HA reports.
 
 **Versioning and settings**
 - `homedicator_core_version_tag` in `core.yaml` is the release version. The settings/about page compares it with the latest GitHub release of `${homedicator_release_repo}` (`core/config/common/interval.yaml`).

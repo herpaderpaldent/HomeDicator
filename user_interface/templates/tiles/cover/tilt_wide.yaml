@@ -1,0 +1,55 @@
+obj:
+  styles: info_or_button_tile_wide
+  width: 440
+  pad_all: 14
+  layout:
+    type: FLEX
+    flex_flow: COLUMN
+    flex_align_main: SPACE_BETWEEN
+    flex_align_cross: CENTER
+    flex_align_track: CENTER
+    pad_row: 0
+  widgets:
+    - !include helpers/header.yaml
+    - obj:
+        width: 100%
+        height: SIZE_CONTENT
+        pad_all: 0
+        bg_opa: TRANSP
+        layout:
+          type: FLEX
+          flex_flow: ROW
+          flex_align_main: SPACE_BETWEEN
+          flex_align_cross: CENTER
+          pad_column: 0
+        widgets:
+          - label:
+              width: 30
+              text_font: icons24
+              text_color: 0xababab
+              text: "\U000F0E79" # mdi:arrow-up-down (position)
+          - !include
+              file: helpers/slider.yaml
+              vars: {suffix: "", action: set_cover_position, data_key: position, width: 296, height: 38}
+          - !include {file: helpers/value.yaml, vars: {suffix: ""}}
+    - obj:
+        width: 100%
+        height: SIZE_CONTENT
+        pad_all: 0
+        bg_opa: TRANSP
+        layout:
+          type: FLEX
+          flex_flow: ROW
+          flex_align_main: SPACE_BETWEEN
+          flex_align_cross: CENTER
+          pad_column: 0
+        widgets:
+          - label:
+              width: 30
+              text_font: icons24
+              text_color: 0xababab
+              text: "\U000F0E77" # mdi:arrow-top-right-bottom-left (tilt)
+          - !include
+              file: helpers/slider.yaml
+              vars: {suffix: "__tilt", action: set_cover_tilt_position, data_key: tilt_position, width: 296, height: 38}
+          - !include {file: helpers/value.yaml, vars: {suffix: "__tilt"}}

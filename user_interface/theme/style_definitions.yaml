@@ -36,3 +36,11 @@
   text_color: 0xababab
   text_font: libreFranklin14
   text_align: CENTER
+- id: cover_tile_button
+  width: 52
+  height: 44
+  radius: 12
+  bg_color: 0x3c3c3c
+  bg_opa: COVER
+  shadow_width: 0
+  pad_all: 0

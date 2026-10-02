@@ -1,0 +1,24 @@
+# Right-aligned "<value>%" next to a cover slider. vars: suffix
+obj:
+  clickable: false
+  bg_opa: TRANSP
+  width: 72
+  height: SIZE_CONTENT
+  pad_all: 0
+  layout:
+    type: FLEX
+    flex_flow: ROW
+    flex_align_main: END
+    flex_align_cross: END
+    pad_column: 2
+  widgets:
+    - label:
+        id: lvgl_value_label_${page_id}__${entity}${suffix}
+        text_font: libreFranklin24
+        text_color: 0xffffff
+        text: "n/a"
+    - label:
+        pad_bottom: 1
+        text_font: libreFranklin20Light
+        text_color: 0xffffff
+        text: "%"
