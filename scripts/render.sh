@@ -7,10 +7,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 ESPHOME_VERSION="${ESPHOME_VERSION:-2026.9.1}"
+RENDER_CONFIG="${RENDER_CONFIG:-examples/render.yaml}"  # any config that includes examples/render.yaml
 
 if [[ "${1:-}" == "--docker" ]]; then
   shift
-  exec docker run --rm -v "$PWD":/repo -w /repo -e ESPHOME_VERSION \
+  exec docker run --rm -v "$PWD":/repo -w /repo -e ESPHOME_VERSION -e RENDER_CONFIG \
     --entrypoint bash "ghcr.io/esphome/esphome:${ESPHOME_VERSION}" -c '
       apt-get update -qq && apt-get install -y -qq xvfb xdotool imagemagick libsdl2-dev >/dev/null &&
       scripts/render.sh "$@"' render "$@"
@@ -21,7 +22,7 @@ mkdir -p "$OUT"
 LOG="$(mktemp)"
 DISPLAY_NUM=":99"
 
-esphome compile examples/render.yaml
+esphome compile "$RENDER_CONFIG"
 BIN="$(find examples/.esphome/build/homedicator-development -name program -type f -perm -u+x | head -1)"
 
 Xvfb "$DISPLAY_NUM" -screen 0 480x480x24 >/dev/null 2>&1 &

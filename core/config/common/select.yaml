@@ -5,6 +5,7 @@ select:
     id: turn_off_screen_after_selector
     entity_category: config
     internal: true
+    restore_value: true # Source of truth for the setting; the global below only mirrors it.
     on_value:
       - globals.set:
           id: turn_off_screen_after_value
